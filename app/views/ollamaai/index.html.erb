@@ -3,7 +3,7 @@
   <div class="row" style="max-width: 1000px; margin: 20px auto;">
     <%= form_with html: { data: { remote: true, type: 'json', controller: 'ollamaai' } } do | form | %>
 
-      <div class="col-sm-5 shadow">
+      <div class="col-sm-5 shadow" style="font-family: monospace;">
         <%= form.select :model, options_for_select(@model_options), {}, { class: 'form-select', data: { 'ollamaai-target': 'selectedModel' } } %>
       </div>
       <%= content_tag :div, class: "chat-container" do %>
