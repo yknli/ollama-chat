@@ -1,4 +1,5 @@
-# README
+# Ollama AI
+A playground to chat with Ollama models.
 
 ## Prerequisites
 
