@@ -27,15 +27,14 @@ class OllamaaiController < ApplicationController
       messages: messages,
       stream: false
     })
-
-    if @result.present?
-      messages << @result[0]['message']
-    end
+    messages << @result[0]['message'] if @result.present?
 
     chat.messages = messages.to_json
     chat.save!
 
     render json: @result, status: 200
+  rescue => e
+    render json: { error: e.message }, status: 500
   end
 
   def generate
