@@ -3,7 +3,7 @@ import Rails from '@rails/ujs';
 
 export default class extends Controller {
 
-  static targets = [ "chatBody", "prompt", "selectedModel", "image" ]
+  static targets = [ "hashId", "chatBody", "prompt", "selectedModel", "image" ]
   // static values = {
   //   loadingIconPath: String
   // }
@@ -14,7 +14,7 @@ export default class extends Controller {
 
   send(event) {
     event.preventDefault();
-
+    let hashId = this.hashIdTarget.value;
     let model = this.selectedModelTarget.value;
 
     let prompt = this.promptTarget.value;
@@ -22,30 +22,20 @@ export default class extends Controller {
       return;
     }
 
-    this.chatBodyTarget.innerHTML+= '' +
-    '<div class="chat-message message-sent">' +
-      '<div class="bg-primary text-white p-3 rounded d-inline-block message-body">' +
-      prompt +
-      '</div>' +
-    '</div>';
+    // Append the message to the chat
+    this.appendMessage(prompt);
 
     // Show loading icon while waiting for response
-    this.chatBodyTarget.innerHTML+= '<div class="loading">' +
-      '<div class="spinner-grow text-primary loading-dot" role="status"></div>' +
-      '<div class="spinner-grow text-success loading-dot" role="status"></div>' +
-      '<div class="spinner-grow text-danger loading-dot" role="status"></div>' +
-      '<div class="spinner-grow text-warning loading-dot" role="status"></div>' +
-    '</div>'
+    this.appendLoadingIcon();
 
     const formData = new FormData();
+    formData.append("hash_id", hashId);
     formData.append("model", model);
     formData.append("prompt", prompt);
 
     let image = null;
     if (this.imageTarget.files.length > 0) {
       image = this.imageTarget.files[0];
-      console.log(`image: ${image}`);
-
       formData.append("image", image);
     }
 
@@ -59,17 +49,10 @@ export default class extends Controller {
       data: formData,
       success: resp => {
         if (resp.length > 0) {
-          // Remove the loading icon
-          document.querySelector('.loading').remove();
-
           // Display the response
           let model_response = resp[0].message.content
-          this.chatBodyTarget.innerHTML+= '' +
-          '<div class="chat-message message-received">' +
-            '<div class="bg-warning p-3 rounded d-inline-block message-body">' +
-            model_response +
-            '</div>' +
-          '</div>';
+          this.responseMessage(model_response);
+
         } else {
           // Display the error message
           this.responseError();
@@ -82,13 +65,49 @@ export default class extends Controller {
     })
   }
 
+  appendMessage(message) {
+    this.chatBodyTarget.innerHTML+= '' +
+    '<div class="chat-message message-sent">' +
+      '<div class="bg-primary text-white p-3 rounded d-inline-block message-body">' +
+      message +
+      '</div>' +
+    '</div>';
+
+    this.scrollToBottom();
+  }
+
+  appendLoadingIcon() {
+    this.chatBodyTarget.innerHTML+= '<div class="loading">' +
+      '<div class="spinner-grow text-primary loading-dot" role="status"></div>' +
+      '<div class="spinner-grow text-success loading-dot" role="status"></div>' +
+      '<div class="spinner-grow text-danger loading-dot" role="status"></div>' +
+      '<div class="spinner-grow text-warning loading-dot" role="status"></div>' +
+    '</div>'
+
+    this.scrollToBottom();
+  }
+
+  responseMessage(message) {
+    // Remove the loading icon
+    this.removeLoadingIcon();
+
+    this.chatBodyTarget.innerHTML+= '' +
+    '<div class="chat-message message-received">' +
+      '<div class="bg-warning p-3 rounded d-inline-block message-body">' +
+      message +
+      '</div>' +
+    '</div>';
+
+    this.scrollToBottom();
+  }
+
   // Display the error message
   responseError(err) {
     if (err) {
       console.log(err);
     }
     // Remove the loading icon
-    document.querySelector('.loading').remove();
+    this.removeLoadingIcon();
 
     this.chatBodyTarget.innerHTML+= '' +
     '<div class="chat-message message-received">' +
@@ -96,6 +115,16 @@ export default class extends Controller {
       'Sorry, Something went wrong. Please try again later.' +
       '</div>' +
     '</div>';
+
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    this.chatBodyTarget.scrollTo(0, this.chatBodyTarget.scrollHeight);
+  }
+
+  removeLoadingIcon() {
+    document.querySelector('.loading').remove();
   }
 
   clear() {

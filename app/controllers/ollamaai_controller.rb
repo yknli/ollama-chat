@@ -10,36 +10,39 @@ class OllamaaiController < ApplicationController
   end
 
   def index
-    session.clear
+    @hash_id = SecureRandom.hex(10)
   end
 
   def submit_message
+    hash_id = permit_params[:hash_id]
     model_index = permit_params[:model].to_i
     model_name = @model_options[model_index][0]
 
     image = permit_params[:image]
     unless image.nil?
-      image_content = image.read
-      base64_image = Base64.strict_encode64(image_content)
+      base64_image = Base64.strict_encode64(image.read)
     end
 
     message = { role: "user", content: permit_params[:prompt] }
     message[:images] = [ base64_image ] if base64_image.present?
-    if session[:context].nil?
-      session[:context] = []
-    end
-    session[:context] << message
 
-    chat_params = {
+    chat = Chat.find_or_create_by(hash_id: hash_id)
+    messages = []
+    messages = JSON.parse(chat.messages) if chat.messages.present?
+    messages << JSON.parse(message.to_json)
+
+    @result = @client.chat({
       model: model_name,
-      messages: session[:context],
+      messages: messages,
       stream: false
-    }
-    @result = @client.chat(chat_params)
+    })
 
     if @result.present?
-      session[:context] << @result[0]['message']
+      messages << @result[0]['message']
     end
+
+    chat.messages = messages.to_json
+    chat.save!
 
     render json: @result, status: 200
   end
@@ -86,6 +89,6 @@ class OllamaaiController < ApplicationController
   end
 
   def permit_params
-    params.permit(:authenticity_token, :format, :model, :prompt, :image)
+    params.permit(:authenticity_token, :format, :hash_id, :model, :prompt, :image)
   end
 end

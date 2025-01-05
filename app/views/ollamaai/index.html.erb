@@ -3,6 +3,8 @@
   <div class="row" style="max-width: 1000px; margin: 20px auto;">
     <%= form_with html: { data: { remote: true, type: 'json', controller: 'ollamaai' } } do | form | %>
 
+      <%= hidden_field_tag :hash_id, @hash_id, { data: { 'ollamaai-target': 'hashId' } }%>
+
       <div class="col-sm-5" style="font-family: monospace;">
         <%= form.select :model, options_for_select(@model_options), {}, { class: 'form-select', data: { 'ollamaai-target': 'selectedModel' } } %>
       </div>
