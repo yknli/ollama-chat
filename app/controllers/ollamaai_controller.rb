@@ -2,13 +2,6 @@ class OllamaaiController < ApplicationController
   before_action :create_client
   before_action :list_models
 
-  def list_models
-    tags = @client.tags
-    models = tags[0]["models"] if tags.present?
-
-    @model_options = models.each_with_index.map { |model, i| [ model["name"], i ] }
-  end
-
   def index
     @hash_id = SecureRandom.hex(10)
   end
@@ -79,6 +72,13 @@ class OllamaaiController < ApplicationController
         connection: { request: { timeout: 120, read_timeout: 120 } }
       }
     )
+  end
+
+  def list_models
+    tags = @client.tags
+    models = tags[0]["models"] if tags.present?
+
+    @model_options = models.each_with_index.map { |model, i| [ model["name"], i ] }
   end
 
   def permit_params
