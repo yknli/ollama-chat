@@ -3,10 +3,10 @@ import Rails from '@rails/ujs';
 
 export default class extends Controller {
 
-  static targets = [ "chatBody", "newPrompt", "selectedModel" ]
-  static values = {
-    loadingIconPath: String
-  }
+  static targets = [ "chatBody", "prompt", "selectedModel", "image" ]
+  // static values = {
+  //   loadingIconPath: String
+  // }
 
   connect() {
     console.log('connect');
@@ -15,8 +15,9 @@ export default class extends Controller {
   send(event) {
     event.preventDefault();
 
-    let prompt = this.newPromptTarget.value;
+    let model = this.selectedModelTarget.value;
 
+    let prompt = this.promptTarget.value;
     if (prompt.trim().length === 0) {
       return;
     }
@@ -28,14 +29,6 @@ export default class extends Controller {
       '</div>' +
     '</div>';
 
-    let data = {
-      model: this.selectedModelTarget.value,
-      prompt: this.newPromptTarget.value,
-    }
-
-    // Clear the promt text box
-    this.newPromptTarget.value = '';
-
     // Show loading icon while waiting for response
     this.chatBodyTarget.innerHTML+= '<div class="loading">' +
       '<div class="spinner-grow text-primary loading-dot" role="status"></div>' +
@@ -44,11 +37,26 @@ export default class extends Controller {
       '<div class="spinner-grow text-warning loading-dot" role="status"></div>' +
     '</div>'
 
+    const formData = new FormData();
+    formData.append("model", model);
+    formData.append("prompt", prompt);
+
+    let image = null;
+    if (this.imageTarget.files.length > 0) {
+      image = this.imageTarget.files[0];
+      console.log(`image: ${image}`);
+
+      formData.append("image", image);
+    }
+
+    // Clear the form
+    this.clear();
+
     // Send the prompt to the server
     Rails.ajax({
       url: '/submit_message.json',
       type: 'POST',
-      data: new URLSearchParams(data).toString(),
+      data: formData,
       success: resp => {
         if (resp.length > 0) {
           // Remove the loading icon
@@ -88,5 +96,9 @@ export default class extends Controller {
       'Sorry, Something went wrong. Please try again later.' +
       '</div>' +
     '</div>';
+  }
+
+  clear() {
+    this.element.reset();
   }
 }

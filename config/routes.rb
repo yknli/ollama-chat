@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   get "/generate", to: "ollamaai#generate"
   get "/chat", to: "ollamaai#chat"
   get "/embeddings", to: "ollamaai#embeddings"
-  get "/image", to: "ollamaai#image"
 
   post "/submit_message", to: "ollamaai#submit_message"
 

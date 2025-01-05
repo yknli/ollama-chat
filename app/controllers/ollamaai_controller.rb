@@ -16,15 +16,21 @@ class OllamaaiController < ApplicationController
     model_index = permit_params[:model].to_i
     model_name = @model_options[model_index][0]
 
-    puts "prompt: #{permit_params[:prompt]}"
-    @result = @client.chat(
-      { model: model_name,
-        messages: [
-          { role: "user", content: permit_params[:prompt] }
-        ],
-        stream: false
-      }
-    )
+    image = permit_params[:image]
+    unless image.nil?
+      image_content = image.read
+      base64_image = Base64.strict_encode64(image_content)
+    end
+
+    chat_params = {
+      model: model_name,
+      messages: [
+        { role: "user", content: permit_params[:prompt] }
+      ],
+      stream: false
+    }
+    chat_params[:images] = [ base64_image ] if base64_image.present?
+    @result = @client.chat(chat_params)
 
     render json: @result, status: 200
   end
@@ -58,18 +64,6 @@ class OllamaaiController < ApplicationController
     render template: "ollamaai/index"
   end
 
-  def image
-    @result = @client.generate(
-      {
-        model: "mario",
-        prompt: "According to the words in the black block at the top of the image, please recommand me some of the best items to buy in this coffee shop.",
-        images: [ Base64.strict_encode64(File.read("public/AF1QipNLCCj8_m5QtG9mL4WSQ8GMA9yDCTYkwu8ZlBlg=s508-k-no.jpg")) ],
-        stream: false
-      }
-    )
-    render template: "ollamaai/index"
-  end
-
   private
 
   def create_client
@@ -83,6 +77,6 @@ class OllamaaiController < ApplicationController
   end
 
   def permit_params
-    params.permit(:authenticity_token, :model, :prompt, :format)
+    params.permit(:authenticity_token, :format, :model, :prompt, :image)
   end
 end
