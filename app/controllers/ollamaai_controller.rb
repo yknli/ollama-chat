@@ -22,14 +22,13 @@ class OllamaaiController < ApplicationController
       base64_image = Base64.strict_encode64(image_content)
     end
 
+    message = { role: "user", content: permit_params[:prompt] }
+    message[:images] = [ base64_image ] if base64_image.present?
     chat_params = {
       model: model_name,
-      messages: [
-        { role: "user", content: permit_params[:prompt] }
-      ],
+      messages: [ message ],
       stream: false
     }
-    chat_params[:images] = [ base64_image ] if base64_image.present?
     @result = @client.chat(chat_params)
 
     render json: @result, status: 200
