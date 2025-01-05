@@ -10,7 +10,6 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   get "/generate", to: "ollamaai#generate"
-  get "/chat", to: "ollamaai#chat"
   get "/embeddings", to: "ollamaai#embeddings"
 
   post "/submit_message", to: "ollamaai#submit_message"
