@@ -10,6 +10,7 @@ class OllamaaiController < ApplicationController
   end
 
   def index
+    session.clear
   end
 
   def submit_message
@@ -24,12 +25,21 @@ class OllamaaiController < ApplicationController
 
     message = { role: "user", content: permit_params[:prompt] }
     message[:images] = [ base64_image ] if base64_image.present?
+    if session[:context].nil?
+      session[:context] = []
+    end
+    session[:context] << message
+
     chat_params = {
       model: model_name,
-      messages: [ message ],
+      messages: session[:context],
       stream: false
     }
     @result = @client.chat(chat_params)
+
+    if @result.present?
+      session[:context] << @result[0]['message']
+    end
 
     render json: @result, status: 200
   end
