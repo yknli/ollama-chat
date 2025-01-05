@@ -1,24 +1,60 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Prerequisites
 
-Things you may want to cover:
+- Ollama
+- RVM
 
-* Ruby version
+To install Ollama, you can use Docker:
 
-* System dependencies
+```sh
+docker run -d -v $HOME/ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+```
 
-* Configuration
+To install LLM models using the Ollama Docker container:
 
-* Database creation
+```sh
+docker exec -it ollama ollama run llama3.2-vision
+```
 
-* Database initialization
+To install RVM, follow the instructions on the [official site](https://rvm.io/).
 
-* How to run the test suite
+## Installation
 
-* Services (job queues, cache servers, search engines, etc.)
+To install Ruby 3.3.1 using RVM:
 
-* Deployment instructions
+```sh
+rvm install 3.3.1
+rvm use 3.3.1 --default
+```
 
-* ...
+To install dependencies using Bundler:
+
+```sh
+bundle install
+```
+
+To install JavaScript dependencies using Yarn (for compiling assets):
+
+```sh
+yarn install
+```
+
+## Running the Application
+
+To start the application, you can use one of the following commands:
+
+```sh
+bin/dev
+```
+**Note: `bin/dev` will compile assets automatically before starting the server.**
+
+or
+
+```sh
+rails server
+```
+
+After running the application, you should see the service page in your browser, which looks like the image below:
+
+![Service Page](doc/images/screenshot.png)
