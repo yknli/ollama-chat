@@ -79,6 +79,9 @@ export default class extends Controller {
     if (err) {
       console.log(err);
     }
+    // Remove the loading icon
+    document.querySelector('.loading').remove();
+
     this.chatBodyTarget.innerHTML+= '' +
     '<div class="chat-message message-received">' +
       '<div class="bg-danger p-3 rounded d-inline-block message-body error">' +
