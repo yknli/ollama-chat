@@ -61,7 +61,7 @@ class OllamaaiController < ApplicationController
 
   def image_base64
     image = permit_params[:image]
-    image.nil? ? '' : Base64.strict_encode64(image.read)
+    @image_base64 ||= image.nil? ? '' : Base64.strict_encode64(image.read)
   end
 
   def create_client
