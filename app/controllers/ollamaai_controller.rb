@@ -14,19 +14,10 @@ class OllamaaiController < ApplicationController
   end
 
   def submit_message
-    hash_id = permit_params[:hash_id]
-    model_index = permit_params[:model].to_i
-    model_name = @model_options[model_index][0]
-
-    image = permit_params[:image]
-    unless image.nil?
-      base64_image = Base64.strict_encode64(image.read)
-    end
-
     message = { role: "user", content: permit_params[:prompt] }
-    message[:images] = [ base64_image ] if base64_image.present?
+    message[:images] = [ image_base64 ] if image_base64.present?
 
-    chat = Chat.find_or_create_by(hash_id: hash_id)
+    chat = Chat.find_or_create_by(hash_id: chat_hash_id)
     messages = []
     messages = JSON.parse(chat.messages) if chat.messages.present?
     messages << JSON.parse(message.to_json)
@@ -77,6 +68,19 @@ class OllamaaiController < ApplicationController
   end
 
   private
+
+  def chat_hash_id
+    @chat_hash_id ||= permit_params[:hash_id]
+  end
+
+  def model_name
+    @model_options[permit_params[:model].to_i][0]
+  end
+
+  def image_base64
+    image = permit_params[:image]
+    image.nil? ? '' : Base64.strict_encode64(image.read)
+  end
 
   def create_client
     @client = Ollama.new(
