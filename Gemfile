@@ -71,3 +71,5 @@ gem "jquery-rails", "~> 4.6"
 gem "ollama-ai", "~> 1.3"
 
 gem "rack-cors", "~> 2.0"
+
+gem "dotenv", "~> 3.1"

@@ -405,6 +405,7 @@ DEPENDENCIES
   capybara
   cssbundling-rails
   debug
+  dotenv (~> 3.1)
   importmap-rails
   jbuilder
   jquery-rails (~> 4.6)

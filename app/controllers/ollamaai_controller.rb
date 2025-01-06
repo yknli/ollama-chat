@@ -66,7 +66,7 @@ class OllamaaiController < ApplicationController
 
   def create_client
     @client = Ollama.new(
-      credentials: { address: "http://localhost:11434" },
+      credentials: { address: ENV["OLLAMA_HOST"] },
       options: {
         server_sent_events: true,
         connection: { request: { timeout: 120, read_timeout: 120 } }
