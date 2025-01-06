@@ -72,13 +72,20 @@ class OllamaaiController < ApplicationController
         connection: { request: { timeout: 120, read_timeout: 120 } }
       }
     )
+  rescue => e
+    Rails.logger.error e.message
   end
 
   def list_models
+    @model_options = []
+
     tags = @client.tags
     models = tags[0]["models"] if tags.present?
 
     @model_options = models.each_with_index.map { |model, i| [ model["name"], i ] }
+  rescue => e
+    Rails.logger.error e.message
+    flash[:alert] = "Connection to Ollama failed."
   end
 
   def permit_params
