@@ -89,6 +89,6 @@ class OllamaaiController < ApplicationController
   end
 
   def permit_params
-    params.permit(:authenticity_token, :format, :hash_id, :model, :prompt, :image)
+    params.permit(:hash_id, :model, :prompt, :image)
   end
 end

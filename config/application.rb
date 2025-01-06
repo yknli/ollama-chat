@@ -23,5 +23,7 @@ module Ollamaai
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.action_controller.always_permitted_parameters = %w( controller action format )
   end
 end
