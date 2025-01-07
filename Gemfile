@@ -37,10 +37,13 @@ gem "bootsnap", require: false
 gem "kamal", require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
-gem "thruster", require: false
+gem "thruster", "~> 0.1.9", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
+
+gem "ollama-ai", "~> 1.3"
+gem "dotenv", "~> 3.1"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -65,11 +68,3 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-
-gem "jquery-rails", "~> 4.6"
-
-gem "ollama-ai", "~> 1.3"
-
-gem "rack-cors", "~> 2.0"
-
-gem "dotenv", "~> 3.1"
