@@ -74,6 +74,7 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+      - run: bundle install
 
       - name: Run tests
         env:
