@@ -29,22 +29,6 @@ class OllamaaiController < ApplicationController
     render json: { error: e.message }, status: 500
   end
 
-  def generate
-    @result = @client.generate(
-    { model: "llama3.2-vision",
-      prompt: "Hello from Ruby on Rails!" }
-    )
-    render template: "ollamaai/index"
-  end
-
-  def embeddings
-    @result = @client.embeddings(
-      { model: "llama3.2-vision",
-        prompt: "Hello!" }
-    )
-    render template: "ollamaai/index"
-  end
-
   private
 
   def chat_hash_id

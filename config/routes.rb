@@ -9,9 +9,6 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  get "/generate", to: "ollamaai#generate"
-  get "/embeddings", to: "ollamaai#embeddings"
-
   post "/submit_message", to: "ollamaai#submit_message"
 
   # Defines the root path route ("/")
