@@ -4,6 +4,9 @@ class OllamaaiController < ApplicationController
 
   def index
     @hash_id = SecureRandom.hex(10)
+    # preload model
+    # Reference: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times
+    @client.chat({ model: model_name })
   end
 
   def submit_message
