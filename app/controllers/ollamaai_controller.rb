@@ -10,21 +10,21 @@ class OllamaaiController < ApplicationController
   end
 
   def submit_message
-    message = { role: "user", content: permit_params[:prompt] }
-    message[:images] = [ image_base64 ] if image_base64.present?
+    chat.add_system_message("You are a helpful ai assistant. You always response in json format { message: \"your response message\" }.")
 
-    messages = []
-    messages = JSON.parse(chat.messages) if chat.messages.present?
-    messages << JSON.parse(message.to_json)
+    images = [ image_base64 ] if image_base64.present?
+    chat.add_user_message(permit_params[:prompt], images)
 
     @result = @client.chat({
       model: model_name,
-      messages: messages,
-      stream: false
+      messages: chat.all_messages,
+      stream: false,
+      format: "json"
     })
-    messages << @result[0]["message"] if @result.present?
 
-    chat.messages = messages.to_json
+    puts "assistant message: #{@result[0]["message"]}"
+
+    chat.add_assistant_message(@result[0]["message"]) if @result.present?
     chat.save!
 
     render json: @result, status: 200
