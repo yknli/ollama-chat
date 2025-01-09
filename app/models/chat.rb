@@ -1,5 +1,4 @@
 class Chat < ApplicationRecord
-
   before_save :parse_all_messages
 
   def add_system_message(system_message)

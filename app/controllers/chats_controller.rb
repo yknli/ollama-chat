@@ -1,4 +1,4 @@
-class OllamaaiController < ApplicationController
+class ChatsController < ApplicationController
   before_action :create_client
   before_action :list_models
 
@@ -10,7 +10,7 @@ class OllamaaiController < ApplicationController
   end
 
   def submit_message
-    chat.add_system_message("You are a helpful ai assistant. You always response in json format { message: \"your response message\" }.")
+    chat.add_system_message("You are a helpful ai assistant. You always response in json format { \"message\": \"your response message\" }.")
 
     images = [ image_base64 ] if image_base64.present?
     chat.add_user_message(permit_params[:prompt], images)

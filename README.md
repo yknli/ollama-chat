@@ -1,4 +1,4 @@
-# Ollama AI
+# Ollama Chat
 A playground to chat with Ollama models.
 
 ## Prerequisites
