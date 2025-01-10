@@ -45,6 +45,7 @@ gem "thruster", "~> 0.1.10", require: false
 gem "ollama-ai", "~> 1.3"
 gem "dotenv", "~> 3.1"
 gem "haml-rails", "~> 2.1"
+gem "google-apis-customsearch_v1", "~> 0.23.0"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
