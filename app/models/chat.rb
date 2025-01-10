@@ -1,6 +1,8 @@
 class Chat < ApplicationRecord
   before_save :parse_all_messages
 
+  validates :hash_id, presence: true
+
   def add_system_message(system_message)
     self.unsaved_messages << { "role" => "system",  "content" => system_message }
   end
