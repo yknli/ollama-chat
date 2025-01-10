@@ -6,6 +6,10 @@ RSpec.describe Chat, type: :model do
       @chat = Chat.new
     end
 
+    describe "validations" do
+      it { should validate_presence_of(:hash_id) }
+    end
+
     describe "unsaved_messages" do
       subject { @chat.send(:unsaved_messages) }
       it "returns an empty array if there are no unsaved messages" do
