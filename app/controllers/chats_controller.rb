@@ -21,9 +21,6 @@ class ChatsController < ApplicationController
       stream: false,
       format: "json"
     })
-
-    puts "assistant message: #{@result[0]["message"]}"
-
     chat.add_assistant_message(@result[0]["message"]) if @result.present?
     chat.save!
 
