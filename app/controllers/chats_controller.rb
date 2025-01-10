@@ -19,8 +19,8 @@ class ChatsController < ApplicationController
 
     data_sources = []
     # Search on google first to get related informations
-    if user_message.starts_with?("/web ")
-      query = user_message.gsub("/web ", "")
+    if user_message.starts_with?(cmds[:web_search])
+      query = user_message.gsub("#{cmds[:web_search]} ", "")
       results = GoogleApi.search_web(query)
       if results.present?
         prepend_user_message = "以下為網路上所查到的資訊: \n"
@@ -63,6 +63,12 @@ class ChatsController < ApplicationController
   end
 
   private
+
+  def cmds
+    {
+      web_search: "/web"
+    }
+  end
 
   def chat_hash_id
     @chat_hash_id ||= permit_params[:hash_id]
