@@ -43,7 +43,7 @@ class ChatsController < ApplicationController
     @result = @client.chat({
       model: model_name,
       messages: chat.all_messages,
-      stream: false,
+      stream: false
       # format: "json" # make assistant respond in json format
     })
     chat.add_assistant_message(@result[0]["message"]) if @result.present?

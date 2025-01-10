@@ -1,7 +1,6 @@
 require "google/apis/customsearch_v1"
 
 class GoogleApi
-
   def self.search_web(query)
     client = Google::Apis::CustomsearchV1::CustomSearchAPIService.new
     client.key = ENV["GOOGLE_CUSTOM_SEARCH_API_KEY"]
@@ -18,5 +17,4 @@ class GoogleApi
     end
     results
   end
-
 end
