@@ -36,6 +36,7 @@ class ChatsController < ApplicationController
   end
 
   def chat
+    # Chat instance should be created only when the chat actually started (at least a message been sent)
     @chat ||= Chat.find_or_create_by(hash_id: chat_hash_id)
   end
 
