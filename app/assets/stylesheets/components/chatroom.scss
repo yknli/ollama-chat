@@ -43,7 +43,10 @@
   color: darkslategray;
   &.error {
     color: ivory;
- }
+  }
+  > a {
+    word-wrap: break-word;
+  }
  text-align: left;
 }
 .chat-footer {
