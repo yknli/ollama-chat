@@ -4,9 +4,6 @@ import Rails from '@rails/ujs';
 export default class extends Controller {
 
   static targets = [ "hashId", "chatBody", "prompt", "selectedModel", "image" ]
-  // static values = {
-  //   loadingIconPath: String
-  // }
 
   connect() {
     console.log('connect');
