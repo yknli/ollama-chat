@@ -7,7 +7,7 @@ class Chat < ApplicationRecord
     self.unsaved_messages << { "role" => "system",  "content" => system_message }
   end
 
-  def add_user_message(user_message, images)
+  def add_user_message(user_message, images=[])
     msg = { "role" => "user", "content" => user_message }
     msg["images"] = images if images.present?
     self.unsaved_messages << msg

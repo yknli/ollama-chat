@@ -45,10 +45,17 @@ export default class extends Controller {
       type: 'POST',
       data: formData,
       success: resp => {
-        if (resp.length > 0) {
+        if (resp.content) {
           // Display the response
-          let model_response = resp[0].message.content
-          this.responseMessage(model_response);
+          let modelResponse = resp.content;
+
+          // Append data sources from internet
+          if (resp.data_sources && resp.data_sources.length > 0) {
+            let formattedDataSources = this.formatDataSources(resp.data_sources);
+            modelResponse += `${formattedDataSources}`;
+          }
+
+          this.responseMessage(modelResponse);
 
         } else {
           // Display the error message
@@ -71,6 +78,17 @@ export default class extends Controller {
     '</div>';
 
     this.scrollToBottom();
+  }
+
+  formatDataSources(dataSources) {
+    let formatted = [];
+    dataSources.forEach((dataSource, index) => {
+      formatted.push(`${index + 1}. <a href="${dataSource}">${dataSource}</a>`);
+    });
+
+    let formattedDataSources = `<br/><br/>資料來源:<br/>`;
+    formattedDataSources += formatted.join('<br/>');
+    return formattedDataSources;
   }
 
   appendLoadingIcon() {

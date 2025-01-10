@@ -10,21 +10,54 @@ class ChatsController < ApplicationController
   end
 
   def submit_message
-    chat.add_system_message("You are a helpful ai assistant. You always response in json format { \"message\": \"your response message\" }.")
+    user_message = permit_params[:prompt]
+
+    system_message = "你是一位 AI 助理。除了回答你原本就知道答案的問題，也會根據用戶提供的網路資料歸納出問題答案。"
+    if chat.all_messages.blank?
+      chat.add_system_message(system_message)
+    end
+
+    data_sources = []
+    # Search on google first to get related informations
+    if user_message.starts_with?("/web ")
+      query = user_message.gsub("/web ", "")
+      results = GoogleApi.search_web(query)
+      if results.present?
+        prepend_user_message = "以下為網路上所查到的資訊: \n"
+        results.each_with_index do |result, index|
+          prepend_user_message += "第 #{index + 1} 則資訊: \n"
+          prepend_user_message += "標題: #{result[:title]}\n"
+          prepend_user_message += "描述: #{result[:description]}\n"
+          prepend_user_message += "資料來源: #{result[:link]}\n\n"
+
+          data_sources << result[:link] if index < 3
+        end
+        prepend_user_message += "請根據上述的資訊回答問題。並且在回應的開頭以「根據網路上的資訊」作為開頭。"
+        chat.add_user_message(prepend_user_message)
+      end
+    end
 
     images = [ image_base64 ] if image_base64.present?
-    chat.add_user_message(permit_params[:prompt], images)
+    chat.add_user_message(user_message, images)
 
     @result = @client.chat({
       model: model_name,
       messages: chat.all_messages,
       stream: false,
-      format: "json"
+      # format: "json" # make assistant respond in json format
     })
     chat.add_assistant_message(@result[0]["message"]) if @result.present?
     chat.save!
 
-    render json: @result, status: 200
+    result_content = ""
+    if @result.present?
+      result_message = @result[0]["message"]
+      result_content = result_message["content"] if result_message.present?
+    end
+
+    response_data = { content: result_content }
+    response_data[:data_sources] = data_sources if data_sources.length > 0
+    render json: response_data, status: 200
   rescue => e
     render json: { error: e.message }, status: 500
   end
