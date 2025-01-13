@@ -41,6 +41,12 @@ To install JavaScript dependencies using Yarn (for compiling assets):
 yarn install
 ```
 
+To setup database schema:
+
+```
+bin/rails db:create db:migrate
+```
+
 ## Running the Application
 
 To start the application, you can use one of the following commands:
