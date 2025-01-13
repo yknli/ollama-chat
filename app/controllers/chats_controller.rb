@@ -1,11 +1,12 @@
 class ChatsController < ApplicationController
+  include ImagesAttachable
+
   before_action :create_client
   before_action :list_models
 
   def index
     @hash_id = SecureRandom.hex(10)
-    # preload model
-    # Reference: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times
+    # Preload model, Reference: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times
     @client.chat({ model: model_name })
   end
 
@@ -37,8 +38,7 @@ class ChatsController < ApplicationController
       end
     end
 
-    images = [ image_base64 ] if image_base64.present?
-    chat.add_user_message(user_message, images)
+    chat.add_user_message(user_message, attached_images_base64)
 
     @result = @client.chat({
       model: model_name,
@@ -83,11 +83,6 @@ class ChatsController < ApplicationController
     @model_options[permit_params[:model].to_i][0]
   end
 
-  def image_base64
-    image = permit_params[:image]
-    @image_base64 ||= image.nil? ? "" : Base64.strict_encode64(image.read)
-  end
-
   def create_client
     @client = Ollama.new(
       credentials: { address: ENV["OLLAMA_HOST"] },
@@ -112,7 +107,9 @@ class ChatsController < ApplicationController
     flash[:alert] = "Connection to Ollama failed."
   end
 
+  private
+
   def permit_params
-    params.permit(:hash_id, :model, :prompt, :image)
+    params.permit(:hash_id, :model, :prompt, images: [])
   end
 end

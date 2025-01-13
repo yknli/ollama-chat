@@ -12,8 +12,8 @@
         = content_tag :div, class: "chat-body shadow-lg", data: { 'chats-target': 'chatBody' } do
           = ''
         .chat-footer.d-flex.input-group
-          = label_tag :image, { class: "btn btn-outline-secondary" } do
-            = 'Image'
-            = form.file_field :image, { multiple: true, hidden: true, data: { 'chats-target': 'image' } }
+          = label_tag :images, { class: "btn btn-outline-secondary" } do
+            = 'Images'
+            = form.file_field :images, { multiple: true, hidden: true, data: { 'chats-target': 'images' } }
           = form.text_field :prompt, { class: "form-control form-control-sm", placeholder: "Type your prompt here...", data: { 'chats-target': 'prompt' }  }
           = button_tag 'Send', name: nil, class: "btn btn-primary", data: { action: 'click->chats#send' }

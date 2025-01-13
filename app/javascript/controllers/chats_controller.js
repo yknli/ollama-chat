@@ -3,7 +3,7 @@ import Rails from '@rails/ujs';
 
 export default class extends Controller {
 
-  static targets = [ "hashId", "chatBody", "prompt", "selectedModel", "image" ]
+  static targets = [ "hashId", "chatBody", "prompt", "selectedModel", "images" ]
 
   connect() {
     console.log('connect');
@@ -30,10 +30,13 @@ export default class extends Controller {
     formData.append("model", model);
     formData.append("prompt", prompt);
 
-    let image = null;
-    if (this.imageTarget.files.length > 0) {
-      image = this.imageTarget.files[0];
-      formData.append("image", image);
+    let images = null;
+    if (this.imagesTarget.files.length > 0) {
+      // images is a Object
+      images = this.imagesTarget.files;
+      for(let i = 0; i < images.length; i++) {
+        formData.append(`images[]`, images[i]);
+      }
     }
 
     // Clear the form
