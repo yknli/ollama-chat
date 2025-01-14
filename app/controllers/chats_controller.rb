@@ -1,13 +1,13 @@
 class ChatsController < ApplicationController
   include ImagesAttachable
 
-  before_action :create_client
+  before_action :set_ollama_client
   before_action :list_models
 
   def index
     @hash_id = SecureRandom.hex(10)
     # Preload model, Reference: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times
-    @client.chat({ model: model_name })
+    @ollama_client.chat(model_name, [])
   end
 
   def submit_message
@@ -40,12 +40,7 @@ class ChatsController < ApplicationController
 
     chat.add_user_message(user_message, attached_images_base64)
 
-    @result = @client.chat({
-      model: model_name,
-      messages: chat.all_messages,
-      stream: false
-      # format: "json" # make assistant respond in json format
-    })
+    @result = @ollama_client.chat(model_name, chat.all_messages, stream: false)
     chat.add_assistant_message(@result[0]["message"]) if @result.present?
     chat.save!
 
@@ -83,31 +78,13 @@ class ChatsController < ApplicationController
     @model_options[permit_params[:model].to_i][0]
   end
 
-  def create_client
-    @client = Ollama.new(
-      credentials: { address: ENV["OLLAMA_HOST"] },
-      options: {
-        server_sent_events: true,
-        connection: { request: { timeout: 120, read_timeout: 120 } }
-      }
-    )
-  rescue => e
-    Rails.logger.error e.message
+  def set_ollama_client
+    @ollama_client = OllamaClient.new
   end
 
   def list_models
-    @model_options = []
-
-    tags = @client.tags
-    models = tags[0]["models"] if tags.present?
-
-    @model_options = models.each_with_index.map { |model, i| [ model["name"], i ] }
-  rescue => e
-    Rails.logger.error e.message
-    flash[:alert] = "Connection to Ollama failed."
+    @model_options = @ollama_client.list_models
   end
-
-  private
 
   def permit_params
     params.permit(:hash_id, :model, :prompt, images: [])
