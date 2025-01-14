@@ -1,7 +1,7 @@
 .container
   .row{:style => "max-width: 1000px; margin: 20px auto;"}
     = form_with html: { data: { remote: true, controller: 'chats' } } do | form |
-      = hidden_field_tag :hash_id, @hash_id, { data: { 'chats-target': 'hashId' } }
+      = hidden_field_tag :hash_id, @chat.nil? ? "" : @chat.hash_id, { data: { 'chats-target': 'hashId' } }
       .col-sm-12{:style => "font-family: monospace;"}
         - flash.each do |type, msg|
           .alert.alert-warning

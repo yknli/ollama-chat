@@ -1,4 +1,5 @@
 class Chat < ApplicationRecord
+  after_initialize :generate_hash_id
   before_save :parse_all_messages
 
   validates :hash_id, presence: true
@@ -35,5 +36,9 @@ class Chat < ApplicationRecord
 
   def parse_all_messages
     self.messages = all_messages.to_json
+  end
+
+  def generate_hash_id
+    self.hash_id = SecureRandom.hex(10)
   end
 end

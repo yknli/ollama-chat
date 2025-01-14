@@ -5,7 +5,6 @@ class ChatsController < ApplicationController
   before_action :list_models
 
   def index
-    @hash_id = SecureRandom.hex(10)
     # Preload model, Reference: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times
     @ollama_client.chat(model_name, [])
   end
@@ -52,6 +51,7 @@ class ChatsController < ApplicationController
 
     response_data = { content: result_content }
     response_data[:data_sources] = data_sources if data_sources.length > 0
+    response_data[:hash_id] = chat.hash_id
     render json: response_data, status: 200
   rescue => e
     render json: { error: e.message }, status: 500
@@ -65,13 +65,12 @@ class ChatsController < ApplicationController
     }
   end
 
-  def chat_hash_id
-    @chat_hash_id ||= permit_params[:hash_id]
-  end
-
   def chat
-    # Chat instance should be created only when the chat actually started (at least a message been sent)
-    @chat ||= Chat.find_or_create_by(hash_id: chat_hash_id)
+    @chat ||= if permit_params[:hash_id].present?
+      Chat.find_by(hash_id: permit_params[:hash_id])
+    else
+      Chat.new
+    end
   end
 
   def model_name

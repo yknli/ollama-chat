@@ -58,6 +58,11 @@ export default class extends Controller {
             modelResponse += `${formattedDataSources}`;
           }
 
+          // Set chat hash id for keeping chat context
+          if (this.hashIdTarget.value === "" &&resp.hash_id) {
+            this.hashIdTarget.value = resp.hash_id;
+          }
+
           this.responseMessage(modelResponse);
 
         } else {
