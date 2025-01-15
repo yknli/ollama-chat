@@ -18,10 +18,6 @@ class OllamaClient
     models = tags[0]["models"] if tags.present?
 
     @model_options = models.each_with_index.map { |model, i| [ model["name"], i ] }
-  rescue => e
-    Rails.logger.error e.message
-    flash[:alert] = "Connection to Ollama failed."
-    []
   end
 
   def chat(model_name, messages, stream: false)

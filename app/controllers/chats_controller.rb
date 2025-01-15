@@ -6,7 +6,7 @@ class ChatsController < ApplicationController
 
   def index
     # Preload model, Reference: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times
-    @ollama_client.chat(model_name, [])
+    @ollama_client.chat(model_name, []) if model_name.present?
   end
 
   def submit_message
@@ -74,6 +74,7 @@ class ChatsController < ApplicationController
   end
 
   def model_name
+    return "" if @model_options.blank?
     @model_options[permit_params[:model].to_i][0]
   end
 
@@ -82,7 +83,11 @@ class ChatsController < ApplicationController
   end
 
   def list_models
+    @model_options = []
     @model_options = @ollama_client.list_models
+  rescue => e
+    Rails.logger.error e.message
+    flash[:alert] = "Connection to Ollama failed."
   end
 
   def permit_params
