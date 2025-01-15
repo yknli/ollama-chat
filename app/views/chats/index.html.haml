@@ -5,7 +5,7 @@
       .col-sm-12{:style => "font-family: monospace;"}
         - flash.each do |type, msg|
           .alert.alert-warning
-          = msg
+            = msg
       .col-sm-5{:style => "font-family: monospace;"}
         = form.select :model, options_for_select(@model_options), {}, { class: 'form-select', data: { 'chats-target': 'selectedModel' } }
       = content_tag :div, class: "chat-container" do
