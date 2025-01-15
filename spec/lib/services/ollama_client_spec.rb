@@ -34,14 +34,14 @@ RSpec.describe OllamaClient do
     end
 
     context "when models are present" do
-      let(:models_data) { [{"models" => [{"name" => "model1"}, {"name" => "model2"}]}] }
+      let(:models_data) { [ { "models" => [ { "name" => "model1" }, { "name" => "model2" } ] } ] }
 
       before do
         allow(mock_ollama_client).to receive(:tags).and_return(models_data)
       end
 
       it "returns an array of model names with indices" do
-        expect(ollama_client.list_models).to eq([["model1", 0], ["model2", 1]])
+        expect(ollama_client.list_models).to eq([ [ "model1", 0 ], [ "model2", 1 ] ])
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe OllamaClient do
     let(:ollama_client) { OllamaClient.new }
     let(:mock_ollama_client) { instance_double(Ollama::Controllers::Client) }
     let(:model_name) { "test_model" }
-    let(:messages) { [{ "role" => "user", "content" => "hello" }] }
+    let(:messages) { [ { "role" => "user", "content" => "hello" } ] }
 
     before do
       allow(Ollama).to receive(:new).and_return(mock_ollama_client)
