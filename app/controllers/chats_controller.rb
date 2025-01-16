@@ -86,11 +86,13 @@ class ChatsController < ApplicationController
   end
 
   def list_models
+    flash.clear
+
     @model_options = []
     @model_options = @ollama_client.list_models
   rescue => e
     Rails.logger.error e.message
-    flash[:alert] = "Connection to Ollama failed."
+    flash[:alert] = e.message
   end
 
   def permit_params
