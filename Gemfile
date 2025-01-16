@@ -58,6 +58,8 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "pry", "~> 0.15.2"
+
+  gem "pre-commit", require: false
 end
 
 group :development do

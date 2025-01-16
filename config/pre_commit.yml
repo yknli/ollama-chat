@@ -1,0 +1,7 @@
+---
+:warnings_remove: []
+:warnings_add: []
+:checks_remove: []
+:checks_add:
+- :pry
+- :merge_conflict

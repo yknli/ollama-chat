@@ -53,6 +53,22 @@ To fetch credentials from AWS SSM Parameter Store:
 . ./script/master_key.sh
 ```
 
+To setup pre-commit checks:
+
+```
+# install pre-commit command
+gem install pre-commit
+
+# setup custom pre-commit hooks
+. ./script/install_hooks.sh
+```
+
+Now `pre-commit` checks should be executed for checking following issues when you commit changes:
+- pry
+- merge_conflict
+- rubocup
+- rspec
+
 ## Running the Application
 
 To start the application, you can use one of the following commands:
