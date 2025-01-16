@@ -47,6 +47,12 @@ To setup database schema:
 bin/rails db:create db:migrate
 ```
 
+To fetch credentials from AWS SSM Parameter Store:
+
+```
+. ./script/master_key.sh
+```
+
 ## Running the Application
 
 To start the application, you can use one of the following commands:
