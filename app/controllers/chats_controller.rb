@@ -5,7 +5,8 @@ class ChatsController < ApplicationController
   before_action :list_models
 
   def index
-    # Preload model, Reference: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times
+    # Preload model
+    # * Reference: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-preload-a-model-into-ollama-to-get-faster-response-times
     @ollama_client.chat(model_name, []) if model_name.present?
   end
 
@@ -38,7 +39,11 @@ class ChatsController < ApplicationController
     chat.add_user_message(user_message, attached_images_base64)
 
     @result = @ollama_client.chat(model_name, chat.all_messages, stream: false)
-    chat.add_assistant_message(@result[0]["message"]) if @result.present?
+    if @result.present?
+      assistant_message = @result[0].try(:[], "message")
+      chat.add_assistant_message(@result[0]["message"]) if assistant_message.present?
+    end
+
     chat.save!
 
     result_content = ""
