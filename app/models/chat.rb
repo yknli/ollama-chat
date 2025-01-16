@@ -5,7 +5,9 @@ class Chat < ApplicationRecord
   validates :hash_id, presence: true
 
   def add_system_message(system_message)
-    self.unsaved_messages << { "role" => "system",  "content" => system_message }
+    if self.all_messages.blank?
+      self.unsaved_messages << { "role" => "system",  "content" => system_message }
+    end
   end
 
   def add_user_message(user_message, images = [])

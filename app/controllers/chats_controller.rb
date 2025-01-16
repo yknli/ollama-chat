@@ -13,9 +13,7 @@ class ChatsController < ApplicationController
     user_message = permit_params[:prompt]
 
     system_message = "你是一位 AI 助理。除了回答你原本就知道答案的問題，也會根據用戶提供的網路資料歸納出問題答案。"
-    if chat.all_messages.blank?
-      chat.add_system_message(system_message)
-    end
+    chat.add_system_message(system_message)
 
     data_sources = []
     # Search on google first to get related informations
