@@ -2,9 +2,9 @@
 
 set -e
 
-cd "${0%/*}/.."
+cd "${0%/*}/../.."
 
 echo "----------------------------------------------"
-echo -e "Running pre-commit enabled checks...\n"
+echo -e "Running pre-commit builtin enabled checks...\n"
 
 pre-commit run git
