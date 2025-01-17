@@ -6,16 +6,16 @@ A playground to chat with Ollama models.
 - Ollama
 - RVM
 
-To install Ollama, you can use Docker:
+To run Ollama, you can simply use Docker Compose:
 
 ```sh
-docker run -d -v $HOME/ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+docker compose up -d
 ```
 
 To install LLM models using the Ollama Docker container:
 
 ```sh
-docker exec -it ollama ollama run llama3.2-vision
+docker exec -it ollama ollama run llama3.2-vision:11b
 ```
 
 To install RVM, follow the instructions on the [official site](https://rvm.io/).
