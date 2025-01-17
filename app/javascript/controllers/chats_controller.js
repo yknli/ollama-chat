@@ -5,10 +5,6 @@ export default class extends Controller {
 
   static targets = [ "hashId", "chatBody", "prompt", "selectedModel", "images" ]
 
-  connect() {
-    console.log('connect');
-  }
-
   send(event) {
     event.preventDefault();
     let hashId = this.hashIdTarget.value;
@@ -126,9 +122,6 @@ export default class extends Controller {
 
   // Display the error message
   responseError(err) {
-    if (err) {
-      console.log(err);
-    }
     // Remove the loading icon
     this.removeLoadingIcon();
 
